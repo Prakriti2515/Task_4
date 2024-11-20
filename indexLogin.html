@@ -4,19 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login for Task 4</title>
-
+    <link rel="stylesheet" href="styleLogin.css">
 </head>
 <body>
     <div class="container">
         <h1>LOGIN to the existing account</h1>
         <form>
+            <label for="inputID">Email: </label><br>
             <input type="text" placeholder="Enter email id" id="inputID">
-            <label for="inputID">EMAIL: </label>
+            <br>
+            <label for="pass">Password: </label><br>
             <input type="password" placeholder="Enter password here" id="pass">
-            <label for="pass">PASSWORD: </label>
-            <a href="#">Forgot password?</a>
-            <button type="submit" id="sub-btn"><b>Login</b></button>
-            <a href="#">New here? Create an account</a>
+            <br>
+            <div id="login-button"><button type="submit" id="sub-btn"><a href="#" id="but-link"><b>LOGIN</b></a></button>
+            </div><br>
+            <a href="#" class="link">Forgot password?</a>
+            <br>
+            <a href="#" class="link">New here? Create an account</a>
         </form>
     </div>
     

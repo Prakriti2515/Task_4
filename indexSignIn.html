@@ -4,17 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign-UP</title>
+    <link rel="stylesheet" href="styleSignUp.css">
 </head>
 <body>
     <div class="container">
         <h1>SIGN-UP</h1>
         <form>
-            <input type="text" placeholder="Enter name id" id="inputID">
-            <label for="inputID">NAME: </label>
+            <label for="input-name" class="label">NAME: </label>
+            <input type="text" placeholder="Enter name id" id="input-name">
+            <br>
+            <label for="inputID" class="label">EMAIL: </label>
             <input type="text" placeholder="Enter email id" id="inputID">
-            <label for="inputID">EMAIL: </label>
+            <br>
             <p>By continuing, you agree to Team Conatus' terms and conditions</p>
-            <button><a href="#">Continue</a></button>
+            <button id="cont-btn"><a href="#" id="link"><b>Continue</b></a></button>
         </form>
     </div>
 </body>
