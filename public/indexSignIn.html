@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign-UP</title>
+    <link rel="stylesheet" href="styleSignUp.css">
+</head>
+<body>
+    <div class="container">
+        <h1>SIGN-UP</h1>
+        <form>
+            <label for="input-name" class="label">Name: </label>
+            <input type="text" placeholder="Enter name id" id="input-name" required>
+            <br>
+            <label for="inputID" class="label">Email: </label>
+            <input type="text" placeholder="Enter email id" id="inputID" required>
+            <br>
+            <label for="create-pass" class="label">Create Password: </label>
+            <input type="password" placeholder="Type Password here" id="create-pass" required>
+            <br>
+            <label for="cnf-pass" class="label">Confirm Password: </label>
+            <input type="password" placeholder="Confirm Password here" id="cnf-pass" required>
+            <br>
+            <p>By continuing, you agree to Team Conatus' terms and conditions</p>
+            <button id="cont-btn"><a href="#" id="link" aria-disabled="true"><b>Continue</b></a></button>
+        </form>
+        
+    </div>
+    <script>
+        const name = document.getElementById('input-name');
+        const email = document.getElementById('inputID');
+        const createPass = document.getElementById('create-pass');
+        const cnfPass = document.getElementById('cnf-pass');
+        const contButton = document.getElementById('cont-btn');
+
+        if(name.value && email.value && createPass.value && cnfPass.value){
+            contButton.disabled = false
+        }
+        else{
+            contButton.disabled = true;
+        }
+
+
+    </script>
+</body>
+</html>
