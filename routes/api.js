@@ -37,7 +37,7 @@ router.post('/signup', async(req,res) => {
     }
     const validate = ValidatePass(password);
     if(validate)
-        return res.status(400).json({message: "weak password"});
+        return res.status(400).json({message: "Weak password. Try changing it"});
 
     try{
         const existingUser = await User.findOne({email}); 
@@ -75,6 +75,8 @@ router.post('/login', async (req, res) => {
         const isMatch = await bcrypt.compare(password, checkUser.password);
         if(!isMatch)
             return res.status(400).json({message: "Invalid email or password"});
+        else
+        return res.status(200).json({message: "Login successful!"});
     }
     catch(error){
         console.error(error);
