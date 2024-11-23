@@ -1,5 +1,6 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'); //
 
+//creating a structure for the data to be stored in the database
 const signUpSchema = new mongoose.Schema({
     name:{
         type : String,

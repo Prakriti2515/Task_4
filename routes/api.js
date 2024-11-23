@@ -1,9 +1,10 @@
 const express = require('express');
-const router = express.Router(); 
-const bcrypt = require('bcryptjs');
+const router = express.Router(); //for handling and managing different routes
+const bcrypt = require('bcryptjs'); //for hashing the entered passwords
 const User = require('.././Schema');
 const connectDb = require('.././mongodb');
 
+//criteria for a password
 const ValidatePass = (password) => {
     const minlength = 8;
     const maxlength = 20;
@@ -27,7 +28,8 @@ const ValidatePass = (password) => {
     else
     return null;
 }
-
+ 
+//creating route for the signup page
 router.post('/signup', async(req,res) => {
     const {name, email, password} = req.body;
     if(!name || !email || !password){
@@ -40,9 +42,12 @@ router.post('/signup', async(req,res) => {
     try{
         const existingUser = await User.findOne({email}); 
 
+        //if same email is being used for signup again
         if(existingUser){
             return res.status(400).json({message: "Email already registered"});
         }
+
+        //hashing the password in the database
         const hashedPass = await bcrypt.hash(password, 10);
         const newUser = new User({name, email, password: hashedPass});
         await newUser.save();
@@ -54,6 +59,7 @@ router.post('/signup', async(req,res) => {
     }
 });
 
+//route for the login page
 router.post('/login', async (req, res) => {
     const {email, password} = req.body;
     
@@ -65,6 +71,7 @@ router.post('/login', async (req, res) => {
         if(!checkUser)
             return res.status(400).json({message: "Invalid email "});
         
+        //if the entered user details do not match any present on the database
         const isMatch = await bcrypt.compare(password, checkUser.password);
         if(!isMatch)
             return res.status(400).json({message: "Invalid email or password"});

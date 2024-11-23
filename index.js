@@ -14,16 +14,17 @@ app.use(express.static(path.join(__dirname, 'public'))); //use the static files 
 app.use(express.urlencoded({extended: false})); //for parsing the url encoded format data
 
 app.get('/login',(req,res)=>{
-    res.sendFile(path.join(__dirname, 'public', 'indexLogin.html'));
+    res.sendFile(path.join(__dirname, 'public', 'indexLogin.html')); //to receive data from user on the login page on /login route
 });
 app.get('/signup',(req,res)=>{
-    res.sendFile(path.join(__dirname, 'public', 'indexSignUp.html'));
+    res.sendFile(path.join(__dirname, 'public', 'indexSignUp.html')); //to receive data from user on the signup page on /signup route
 });
 app.post('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'indexLogin.html')); //open the indexLogin file on the port
+    res.sendFile(path.join(__dirname, 'public', 'indexLogin.html')); //to handle the data submitted by the user on the login page
 });
 
-connectDb();
+connectDb(); //connecting mongoose to the server
+
 app.listen(port, () => {
     console.log("Port connected");
 })
