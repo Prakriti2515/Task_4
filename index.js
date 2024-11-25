@@ -1,6 +1,6 @@
 const express = require('express');
 const path = require('path');
-const User = require('./Schema');
+const User = require('./src/models/Schema');
 const connectDb = require("./mongodb");
 const apiRoutes = require('./routes/api'); 
 
@@ -23,7 +23,7 @@ app.post('/login', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'indexLogin.html')); //to handle the data submitted by the user on the login page
 });
 
-connectDb(); //connecting mongoose to the server
+connectDb(); 
 
 app.listen(port, () => {
     console.log("Port connected");

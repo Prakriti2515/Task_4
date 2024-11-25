@@ -1,8 +1,30 @@
 const express = require('express');
 const router = express.Router(); //for handling and managing different routes
 const bcrypt = require('bcryptjs'); //for hashing the entered passwords
-const User = require('.././Schema');
+const nodemailer = require('nodemailer');
+const {v4 : uuidv4} = require('uuid');
+require('dotenv').config();
+
+const User = require('../src/models/Schema');
+const UserVerification = require('../src/models/userVerification'); //mongodb user verification model
 const connectDb = require('.././mongodb');
+
+//nodemailer transporter
+const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth:{
+        user: process.env.AUTH_EMAIL,
+        pass: process.env.AUTH_PASS
+    }
+});
+
+transporter.verify((error, success) =>{
+    if(error){
+        console.log("error");
+    }
+    else
+    console.log("ready for messages");
+})
 
 //criteria for a password
 const ValidatePass = (password) => {
@@ -42,22 +64,64 @@ router.post('/signup', async(req,res) => {
     try{
         const existingUser = await User.findOne({email}); 
 
-        //if same email is being used for signup again
+        
         if(existingUser){
             return res.status(400).json({message: "Email already registered"});
         }
 
         //hashing the password in the database
         const hashedPass = await bcrypt.hash(password, 10);
-        const newUser = new User({name, email, password: hashedPass});
+        const newUser = new User({name, email, password: hashedPass, verified: false});
+
+
         await newUser.save();
-        res.status(201).json({message:"User sign up successful"});
+        // res.status(201).json({message:"User sign up successful"});
+        sendVerificationEmail(result, res);
     }
     catch(error){
         console.error(error);
         res.status(500).json({message: "Server error"});
     }
 });
+
+const sendVerificationEmail = ({_id, email},res)=>{
+    const currentURI = 'http://localhost:4000/signup';
+    const uniqueString = uuidv4() + _id;
+    const mailOptions = {
+        from: process.env.AUTH_EMAIL,
+        to: email,
+        subject: "Verify your email",
+        html: `<p>Verify your email account to complete the signup process and login to your account.</p><p>This link expires in 1 hour</p><p>Press <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here</p>`
+    }
+    //hashing the unique string
+    bcrypt.hash(uniqueString, 10)
+    .then((hashedUniqueString)=>{
+        const newVerification = UserVerification({
+            userId: _id,
+            uniqueString: hashedUniqueString,
+            creationDate: Date.now,
+            expiryDate: Date.now + 3600000,
+        });
+        newVerification.save()
+        .then(()=>{
+            transporter.sendMail(mailOptions)
+            .then(()=>{
+                res.status(200).json({message: "Verification email sent"})
+            })
+            .catch((error)=>{
+                console.log("error");
+                res.status(500).json({message: "Verification email failed"})
+            })
+
+        })
+        .catch((error) => {
+            console.log("error");
+            res.status(500).json({message: "Can't save verification data"});            
+        })
+    }).catch(() =>{
+        res.status(500).json({message: "server error"});
+    })
+}
 
 //route for the login page
 router.post('/login', async (req, res) => {
