@@ -5,13 +5,13 @@ const nodemailer = require('nodemailer');
 const {v4 : uuidv4} = require('uuid');
 require('dotenv').config();
 
-const User = require('../src/models/Schema');
-const UserVerification = require('../src/models/userVerification'); //mongodb user verification model
-const connectDb = require('.././mongodb');
+const User = require('../models/Schema');
+const UserVerification = require('../models/userVerification'); //mongodb user verification model
+const connectDb = require('../../mongodb');
 
 //nodemailer transporter
 const transporter = nodemailer.createTransport({
-    service: "gmail",
+    service: 'gmail',
     auth:{
         user: process.env.AUTH_EMAIL,
         pass: process.env.AUTH_PASS
@@ -20,11 +20,12 @@ const transporter = nodemailer.createTransport({
 
 transporter.verify((error, success) =>{
     if(error){
-        console.log("error");
+        console.log('SMTP connection failed:', error);
     }
-    else
-    console.log("ready for messages");
-})
+    else{
+        console.log('SMTP connection successful:', success);
+    }
+});
 
 //criteria for a password
 const ValidatePass = (password) => {
@@ -63,20 +64,17 @@ router.post('/signup', async(req,res) => {
 
     try{
         const existingUser = await User.findOne({email}); 
-
-        
         if(existingUser){
             return res.status(400).json({message: "Email already registered"});
         }
 
         //hashing the password in the database
-        const hashedPass = await bcrypt.hash(password, 10);
+        const saltRounds = 10;
+        const hashedPass = await bcrypt.hash(password, saltRounds);
         const newUser = new User({name, email, password: hashedPass, verified: false});
-
-
-        await newUser.save();
-        // res.status(201).json({message:"User sign up successful"});
-        sendVerificationEmail(result, res);
+        
+        const result = await newUser.save();
+        sendVerificationEmail(result, res);        
     }
     catch(error){
         console.error(error);
@@ -85,13 +83,13 @@ router.post('/signup', async(req,res) => {
 });
 
 const sendVerificationEmail = ({_id, email},res)=>{
-    const currentURI = 'http://localhost:4000/signup';
+    const currentURI = process.env.HOST_URI.endsWith('/') ? process.env.HOST_URI : process.env.HOST_URI + '/';
     const uniqueString = uuidv4() + _id;
     const mailOptions = {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Verify your email",
-        html: `<p>Verify your email account to complete the signup process and login to your account.</p><p>This link expires in 1 hour</p><p>Press <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here</p>`
+        html: `<p>Verify your email account to complete the signup process.</p><p>This link expires in 1 hour</p><p>Press <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here</a></p>`
     }
     //hashing the unique string
     const saltRounds = 10;
@@ -101,8 +99,8 @@ const sendVerificationEmail = ({_id, email},res)=>{
         const newVerification = UserVerification({
             userId: _id,
             uniqueString: hashedUniqueString,
-            creationDate: Date.now,
-            expiryDate: Date.now + 3600000,
+            creationDate: Date.now(),
+            expiryDate: Date.now() + 3600000,
         });
         newVerification.save()
         .then(()=>{
@@ -138,8 +136,7 @@ router.get(('/verify/:userId/:uniqueString'),(req, res) => {
             {
                 UserVerification.deleteOne({userId})
                 .then((result) => {
-                    User
-                    .deleteOne({_id:userId})
+                    User.deleteOne({_id:userId})
                     .then(()=>{
                         res.status(200).json({message: "Unique string expired. Please sign up again"})
                     })

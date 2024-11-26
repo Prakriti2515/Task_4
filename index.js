@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const User = require('./src/models/Schema');
 const connectDb = require("./mongodb");
-const apiRoutes = require('./routes/api'); 
+const apiRoutes = require('./src/routes/api'); 
 
 const app = express();
 const port = 4000;
