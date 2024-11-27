@@ -74,6 +74,7 @@ router.post('/signup', async(req,res) => {
         const newUser = new User({name, email, password: hashedPass, verified: false});
         
         const result = await newUser.save();
+        console.log("ID saved. Ready to send verification email.");
         sendVerificationEmail(result, res);        
     }
     catch(error){
@@ -83,13 +84,13 @@ router.post('/signup', async(req,res) => {
 });
 
 const sendVerificationEmail = ({_id, email},res)=>{
-    const currentURI = process.env.HOST_URI.endsWith('/') ? process.env.HOST_URI : process.env.HOST_URI + '/';
+    const currentURI = process.env.HOST_URI;
     const uniqueString = uuidv4() + _id;
     const mailOptions = {
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Verify your email",
-        html: `<p>Verify your email account to complete the signup process.</p><p>This link expires in 1 hour</p><p>Press <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here</a></p>`
+        html: `<p>Verify your email account to complete the signup process.</p><p>This link expires in 1 hour</p><p>Click <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here to verify email.</a></p>`
     }
     //hashing the unique string
     const saltRounds = 10;
