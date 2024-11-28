@@ -15,6 +15,10 @@ app.use('/Schema',apiRoutes);
 app.use(express.static(path.join(__dirname, 'public'))); //use the static files from public folder on the port
 app.use(express.urlencoded({extended: false})); //for parsing the url encoded format data
 
+app.get('/signup/user/verify/',(req,res) =>{
+    res.send("Verified");
+})
+
 app.get('/login',(req,res)=>{
     res.sendFile(path.join(__dirname, 'public', 'indexLogin.html')); //to receive data from user on the login page on /login route
 });

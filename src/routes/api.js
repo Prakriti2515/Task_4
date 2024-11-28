@@ -124,76 +124,39 @@ const sendVerificationEmail = ({_id, email},res)=>{
     })
 };
 //verify email
-router.get(('/verify/:userId/:uniqueString'),(req, res) => {
-    let {userId, uniquestring} = req.params;
-    UserVerification.find({userId})
-    .then((result) => { //result is an array of matching docs
-        if(result.length > 0){ 
-            const {expiryDate} = result[0];
-            const hashedUniqueString = result[0].uniqueString;
+router.get(('/verify/:userId/:uniqueString'),async (req, res) => {
+    let {userId, uniqueString} = req.params;
+    try{
+        const result = await UserVerification.findOne({userId});
+        if(!result){
+            return res.status(500).json({message : "Account does not exist or has been verified already. Sign up or login."});
+        }
+        const {expiryDate, uniqueString: hashedUniqueString} = result;
             
-            //checking for expired unique string
-            if(expiryDate < Date.now()) 
-            {
-                UserVerification.deleteOne({userId})
-                .then((result) => {
-                    User.deleteOne({_id:userId})
-                    .then(()=>{
-                        res.status(200).json({message: "Unique string expired. Please sign up again"})
-                    })
-                    .catch((error) =>{
-                        console.log("error");
-                        res.status(500).json({message:"Clearing the user with expired unique string failed"})
-                    })
-                })
-                .catch((error) => {
-                    console.log("error");
-                    res.status(500).json({message : "Error occurred while clearing expired user verification record"})
-                })
-            }
-            else{ //valid record exists
-                bcrypt
-                .compare(uniqueString, hashedUniqueString)
-                .then((result)=>{
-
-                    if(result){
-                        User.updateOne({_id:userId},{verified: true})
-                        .then(()=>{
-                            UserVerification
-                            .deleteOne({userId})
-                            .then(()=>{
-                                console.log("Verified");
-                                res.status(201).json({message:"Verification successful"})
-                            })
-                            .catch((error)=>{
-                                res.status(500).json({message:"Error occurred while finalizing verification"})
-                            })
-                        })
-                        .catch((error)=>{
-                            res.status(500).json({message:"Error occurred while updating user record"})
-                        })
-
-                    }
-                    else{
-                        res.status(500).json({message: "Invalid verification details passed"})
-                    }
-                })
-                .catch((error) => {
-                    res.status(500).json({message:"Error occurred while comparing unique string"})
-                })
-            }
+        //checking for expired unique string
+        if(new Date(expiryDate).getTime() < Date.now()) 
+        {
+            await UserVerification.deleteOne({userId});
+            await User.deleteOne({_id:userId});
+            return res.status(200).json({message: "Unique string expired. Please sign up again"});
         }
-        else{
-            //the user verification record does not exist
-            res.status(500).json({message : "Account record does not exist or has been verified already. Please sign up or log in"});
+        const isValid = await bcrypt.compare(uniqueString, hashedUniqueString);
+            
+        if(!isValid)
+        {
+            return res.status(500).json({message: "Invalid verification details passed"});
         }
-    })
-    .catch((error) =>{
+        await User.updateOne({_id : userId}, {verified : true});
+        await UserVerification.deleteOne({userId});
+        console.log("Verified");
+        return res.status(201).json({message:"Verification successful"});
+    }
+    catch(error)
+    {
         console.log("error");
         res.status(500).json({message: "An error occurred while checking for existing user verification record"});
-    })
-
-})
+    }
+});
 
 //route for the login page
 router.post('/login', async (req, res) => {
