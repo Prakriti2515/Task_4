@@ -3,11 +3,14 @@ const router = express.Router(); //for handling and managing different routes
 const bcrypt = require('bcryptjs'); //for hashing the entered passwords
 const nodemailer = require('nodemailer');
 const {v4 : uuidv4} = require('uuid');
+const jwt = require('jsonwebtoken');
+
 require('dotenv').config();
 
 const User = require('../models/Schema');
 const UserVerification = require('../models/userVerification'); //mongodb user verification model
 const connectDb = require('../../mongodb');
+const jwt_key = process.env.JWT_KEY; 
 
 //nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -191,4 +194,27 @@ router.post('/login', async (req, res) => {
         res.status(500).json({message: "Server Error"});
     }
 });
+
+//request for forgot password
+router.post('/forgot-password', async (req, res) =>{
+    const {email} = req.body;
+
+    if(!email){
+        return res.status(400).json({message: "Email required"});
+    }
+
+    const checkEmail = await User.findOne({email});
+    if(!checkEmail)
+        return res.status(400).json({message: "Email not found "});
+     //creating a json web token
+
+    const json_token = jwt.sign({User}, jwt_key, {expiresIn: '1h'}, (err, token)=>{
+        if(err)
+            console.log("Error while generating the token");
+        else
+        console.log(`Token generated: ${token}`);
+     });    
+});
+
+
 module.exports = router;
