@@ -240,20 +240,22 @@ router.post('/reset-password/:token', async (req, res)=>{
     if(validPass)
         return res.status(400).json({message: "Weak password. Try changing it"});
     try{
-        jwt.verify(token, jwt_key);
+        const decoded = jwt.verify(token, jwt_key);
         
         //token validated
         const user = await User.findById(decoded._id);
         if(!user){
-            res.status(400).json({message: "User not found"});
+            res.status(404).json({message: "User not found"});
         }
         const hashedPass = await bcrypt.hash(newPass, 10);
         user.password = hashedPass;
         await user.save()
-        return res.status(201).json({message: "Password reset successfully!"});
+        return res.status(200).json({message: "Password reset successfully!"});
     }
     catch(error){
-        return res.status(500).json({message: "Error"})
+        console.error(error);
+        return res.status(500).json({message: "Error resetting password"});
+        
     }         
     });
 module.exports = router;
