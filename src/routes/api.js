@@ -3,13 +3,13 @@ const router = express.Router(); //for handling and managing different routes
 const bcrypt = require('bcryptjs'); //for hashing the entered passwords
 const nodemailer = require('nodemailer');
 const {v4 : uuidv4} = require('uuid');
-const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken'); //for creating and verifying jwt
 
 require('dotenv').config();
 
 const User = require('../models/Schema');
 const UserVerification = require('../models/userVerification'); //mongodb user verification model
-const connectDb = require('../../mongodb');
+const connectDb = require('../../config/mongodb');
 const jwt_key = process.env.JWT_KEY; 
 
 //nodemailer transporter
@@ -53,7 +53,7 @@ const ValidatePass = (password) => {
         return 'No digits present in the password';
     else
     return null;
-}
+};
  
 //creating route for the signup page
 router.post('/signup', async(req,res) => {
@@ -93,7 +93,7 @@ const sendVerificationEmail = ({_id, email},res)=>{
         from: process.env.AUTH_EMAIL,
         to: email,
         subject: "Verify your email",
-        html: `<p>Verify your email account to complete the signup process.</p><p>This link expires in 1 hour</p><p>Click <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here to verify email.</a></p>`
+        html: `<p>Verify your email account to complete the signup process.</p><p>This link expires in 1 hour</p><p>Click <a href=${currentURI + "user/verify/" + _id + "/" + uniqueString}>here</a> to verify email.</p>`
     }
     //hashing the unique string
     const saltRounds = 10;
@@ -205,16 +205,55 @@ router.post('/forgot-password', async (req, res) =>{
 
     const checkEmail = await User.findOne({email});
     if(!checkEmail)
-        return res.status(400).json({message: "Email not found "});
-     //creating a json web token
+        return res.status(400).json({message: "Email not found. Enter a valid email"});
 
-    const json_token = jwt.sign({User}, jwt_key, {expiresIn: '1h'}, (err, token)=>{
+    //creating a json web token
+    const reset_token = jwt.sign({id: checkEmail._id, email: checkEmail.email}, jwt_key, {expiresIn: '1h'}, (err, token)=>{
         if(err)
             console.log("Error while generating the token");
         else
         console.log(`Token generated: ${token}`);
      });    
+     //sending reset email
+     const currentURI = 'http://localhost:4000/reset-password/';
+     const mailOptions = {
+        from : process.env.AUTH_EMAIL,
+        to : email,
+        subject : "Reset password",
+        html : `<p>To reset your password, click on reset password below</p><br><p><a href = ${currentURI+reset_token}</a></p><br><p>This link will expire in 1 hour</p>`
+     };
+     transporter.sendMail(mailOptions)
+     .then(()=>{
+        res.status(202).json({message: "Verification email sent.Verification pending."});
+    })
+    .catch((error)=>{
+        console.log("error");
+        res.status(500).json({message: "Verification email failed"});
+    });
 });
+//reset password
+router.post('/reset-password/:token', async (req, res)=>{
+    const {token} = req.params;
+    const {newPass} = req.body;
 
-
+    const validPass = ValidatePass(newPass);
+    if(validPass)
+        return res.status(400).json({message: "Weak password. Try changing it"});
+    try{
+        jwt.verify(token, jwt_key);
+        
+        //token validated
+        const user = await User.findById(decoded._id);
+        if(!user){
+            res.status(400).json({message: "User not found"});
+        }
+        const hashedPass = await bcrypt.hash(newPass, 10);
+        user.password = hashedPass;
+        await user.save()
+        return res.status(201).json({message: "Password reset successfully!"});
+    }
+    catch(error){
+        return res.status(500).json({message: "Error"})
+    }         
+    });
 module.exports = router;
