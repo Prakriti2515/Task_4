@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router(); //for handling and managing different routes
 const bcrypt = require('bcryptjs'); //for hashing the entered passwords
 const nodemailer = require('nodemailer');
-const {v4 : uuidv4} = require('uuid');
+const {v4 : uuidv4} = require('uuid'); //to generate universally unique identifiers from v4 function of uuid package
 const jwt = require('jsonwebtoken'); //for creating and verifying jwt
 
 require('dotenv').config();
@@ -10,7 +10,7 @@ require('dotenv').config();
 const User = require('../models/Schema');
 const UserVerification = require('../models/userVerification'); //mongodb user verification model
 const connectDb = require('../../config/mongodb');
-const jwt_key = process.env.JWT_KEY; 
+const jwt_key = process.env.JWT_KEY; // secret key for json web token used for aunthentication
 
 //nodemailer transporter
 const transporter = nodemailer.createTransport({
@@ -37,7 +37,7 @@ const ValidatePass = (password) => {
     const lowercase = /[a-z]/;
     const uppercase = /[A-Z]/;
     const numbers = /\d/;
-    const specialChar = /[!@#$%^&*(),.?":{}|<>]/;
+    const specialChar = /[!@#$%^&*(),.?":{}|<>]/; //regex for checking presence of special characters
     
     if(password.length < 8)
         return 'Too short password';
