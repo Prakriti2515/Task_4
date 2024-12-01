@@ -39,6 +39,4 @@ const forgot_pass = async (req, res) =>{
     });
 };
 
-
-
-    module.exports = forgot_pass;
+module.exports = forgot_pass;
