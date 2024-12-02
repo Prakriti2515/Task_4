@@ -2,9 +2,9 @@
 const ValidatePass = (password) => {
     const minlength = 8;
     const maxlength = 20;
-    const lowercase = /[a-z]/;
-    const uppercase = /[A-Z]/;
-    const numbers = /\d/;
+    const lowercase = /[a-z]/; //regex for checking presence of lowercase characters
+    const uppercase = /[A-Z]/; //regex for checking presence of uppercase characters
+    const numbers = /\d/; //regex for checking presence of numbers
     const specialChar = /[!@#$%^&*(),.?":{}|<>]/; //regex for checking presence of special characters
     
     if(password.length < 8)

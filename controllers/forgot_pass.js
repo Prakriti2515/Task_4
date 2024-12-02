@@ -1,14 +1,14 @@
 const jwt = require('jsonwebtoken'); //for creating and verifying jwt
 const jwt_key = process.env.JWT_KEY; // secret key for json web token used for aunthentication
 const User = require('../src/models/Schema');
+const transporter = require('../utilities/transporter');
+require('dotenv').config();
 
 const forgot_pass = async (req, res) =>{
     const {email} = req.body;
-
     if(!email){
         return res.status(400).json({message: "Email required"});
     }
-
     const checkEmail = await User.findOne({email});
     if(!checkEmail)
         return res.status(400).json({message: "Email not found. Enter a valid email"});
@@ -22,20 +22,20 @@ const forgot_pass = async (req, res) =>{
      });    
 
      //sending reset email
-     const currentURI = 'http://localhost:4000/reset-password/';
+     const currentURI = process.env.RESET_URI;
      const mailOptions = {
         from : process.env.AUTH_EMAIL,
         to : email,
         subject : "Reset password",
-        html : `<p>To reset your password, click on reset password below</p><br><p><a href = ${currentURI+reset_token}Reset Password</a></p><br><p>This link will expire in 1 hour</p>`
+        html : `<p>To reset your password, click on reset password below</p><br><p><a href = ${currentURI +'/'+reset_token}Reset Password</a></p><br><p><b>This link will expire in 1 hour</b></p>`
      };
      transporter.sendMail(mailOptions)
      .then(()=>{
-        res.status(202).json({message: "Verification email sent.Verification pending."});
+        res.status(202).json({message: "Reset password verification email sent.Verification pending."});
     })
     .catch((error)=>{
         console.log("error");
-        res.status(500).json({message: "Verification email failed"});
+        res.status(500).json({message: "Reset pass verification email failed"});
     });
 };
 

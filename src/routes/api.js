@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router(); //for handling and managing different routes
 const bcrypt = require('bcryptjs'); //for hashing the entered passwords
-const nodemailer = require('nodemailer');
 
 require('dotenv').config();
 
@@ -13,29 +12,11 @@ const reset_pass = require('../../controllers/reset_pass');
 const User = require('../models/Schema'); //mongodb user details model
 const UserVerification = require('../models/userVerification'); //mongodb user verification model
 
-//nodemailer transporter
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth:{
-        user: process.env.AUTH_EMAIL,
-        pass: process.env.AUTH_PASS
-    }
-});
-
-transporter.verify((error, success) =>{
-    if(error){
-        console.log('SMTP connection failed:', error);
-    }
-    else{
-        console.log('SMTP connection successful:', success);
-    }
-});
-
 //creating route for the signup page
 router.post('/signup', signup);
 
 //verify email
-router.get(('/verify/:userId/:uniqueString'),async (req, res) => {
+router.get(('/signup/user/verify/:userId/:uniqueString'),async (req, res) => {
     let {userId, uniqueString} = req.params;
     try{
         const result = await UserVerification.findOne({userId});
@@ -70,7 +51,7 @@ router.get(('/verify/:userId/:uniqueString'),async (req, res) => {
 });
 
 //route for the login page
-router.post('login', signin);
+router.post('/login', signin);
 //request for forgot password
 router.post('/forgot-password', forgot_pass);
 //reset password

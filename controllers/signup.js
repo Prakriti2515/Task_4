@@ -5,7 +5,6 @@ const User = require('../src/models/Schema');
 const sendVerificationEmail = require('../utilities/verif_email');
 const ValidatePass = require('../utilities/pass_check'); //criteria for a password
 
-
 const signup = async(req,res) => {
     const {name, email, password} = req.body;
     if(!name || !email || !password){
@@ -17,7 +16,7 @@ const signup = async(req,res) => {
 
     try{
         const existingUser = await User.findOne({email}); 
-        if(existingUser.verified){
+        if(existingUser){
             return res.status(400).json({message: "Email already registered"});
         }
 

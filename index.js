@@ -14,10 +14,6 @@ app.use('/Schema',apiRoutes);
 
 app.use(express.urlencoded({extended: false})); //for parsing the url encoded format data
 
-app.get('/signup/user/verify/',(req,res) =>{
-    res.send("Verified");
-})
-
 connectDb(); 
 
 app.listen(port, () => {
