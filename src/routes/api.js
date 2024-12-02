@@ -55,6 +55,6 @@ router.post('/login', signin);
 //request for forgot password
 router.post('/forgot-password', forgot_pass);
 //reset password
-router.post('/reset-password', reset_pass);
+router.post('/reset-password/:token', reset_pass);
 
 module.exports = router;
