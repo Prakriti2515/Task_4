@@ -10,18 +10,18 @@ const ValidatePass = (password) => {
     const numbers = /\d/; //regex for checking presence of numbers
     const specialChar = /[!@#$%^&*(),.?":{}|<>]/; //regex for checking presence of special characters
     
-    if(password.length < minlength)
-        return 'Too short password';
-    else if(password.length > maxlength)
-        return 'Too long password';
-    else if(!lowercase.test(password))
-        return 'No lowercase characters';
-    else if(!uppercase.test(password))
-        return 'No uppercase characters';
-    else if(!specialChar.test(password))
-        return 'No special characters used';
-    else if(!numbers.test(password))
-        return 'No digits present in the password';
+    if(password.length < minlength){
+        return 'Too short password';}
+    else if(password.length > maxlength){
+        return 'Too long password';}
+    else if(!lowercase.test(password)){
+        return 'No lowercase characters';}
+    else if(!uppercase.test(password)){
+        return 'No uppercase characters';}
+    else if(!specialChar.test(password)){
+        return 'No special characters used';}
+    else if(!numbers.test(password)){
+        return 'No digits present in the password';}
     else
     return null;
 };
