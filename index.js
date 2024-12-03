@@ -1,5 +1,4 @@
 const express = require('express');
-const User = require('./src/models/Schema');
 const connectDb = require("./config/mongodb");
 const apiRoutes = require('./src/routes/api'); 
 const cors = require('cors');
