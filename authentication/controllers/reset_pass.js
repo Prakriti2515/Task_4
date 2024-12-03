@@ -19,7 +19,6 @@ const reset = async (req, res)=>{
     
     try{
         const decoded = jwt.verify(token, jwt_key);
-        
         //token validated
         const user = await User.findById(decoded.id);
         console.log(decoded);

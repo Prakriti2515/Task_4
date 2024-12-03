@@ -1,6 +1,6 @@
 const express = require('express');
-const connectDb = require("./config/mongodb");
-const apiRoutes = require('./src/routes/api'); 
+const connectDb = require('./authentication/config/mongodb');
+const apiRoutes = require('./authentication/src/routes/api'); 
 const cors = require('cors');
 
 const app = express();
