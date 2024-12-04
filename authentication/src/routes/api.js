@@ -7,7 +7,7 @@ require('dotenv').config();
 const signup = require('../../controllers/signup');
 const signin = require('../../controllers/signin');
 const forgot_pass = require('../../controllers/forgot_pass');
-const reset_pass = require('../../controllers/reset_pass');
+const reset = require('../../controllers/reset_pass');
 
 const User = require('../models/Schema'); //mongodb user details model
 const UserVerification = require('../models/userVerification'); //mongodb user verification model
@@ -57,6 +57,6 @@ router.post('/login', signin);
 //request for forgot password
 router.post('/forgot-password', forgot_pass);
 //reset password
-router.post('/reset-password/:token', reset_pass);
+router.post('/reset-password/:token', reset);
 
 module.exports = router;
