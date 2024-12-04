@@ -2,10 +2,14 @@ const User = require('../../authentication/src/models/Schema');
 const mongoose = require('mongoose');
 const vehicleSchema = new mongoose.Schema({
     driver: {
-        type: mongoose.Schema.Types.ObjectId, ref: 'User' 
+        type: mongoose.Schema.Types.ObjectId, ref: 'User'
     }, // link to the driver
-    vehicleType: String,
-    capacity: Number,
+    vehicleType: {
+        type: String
+    },
+    capacity: {
+        type: Number
+    },
     from: {
         type: String, 
         enum: ['AKGEC', 'Govindpuram', 'Sector 62', 'Lal Kuan'], 
@@ -16,7 +20,9 @@ const vehicleSchema = new mongoose.Schema({
         enum: ['AKGEC', 'Govindpuram', 'Sector 62', 'Lal Kuan'], 
         required: true 
     },
-    dateTime: Date,
+    dateTime: {
+        type: Date
+    },
     availableSeats: {
         type: Number, 
         default: 0 

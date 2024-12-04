@@ -1,9 +1,8 @@
 const express = require('express');
-const app = express();
 const Vehicle = require('../model/vehicle');
 
 // Route to search available vehicles
-app.get('/search', async (req, res) => {
+const search = async (req, res) => {
     const { from, to } = req.query; // Assume these are provided by the passenger
   
     try {
@@ -18,4 +17,6 @@ app.get('/search', async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: 'Error fetching vehicles' });
     }
-  });
+  };
+
+  module.exports = search;

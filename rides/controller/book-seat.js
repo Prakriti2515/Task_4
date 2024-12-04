@@ -3,7 +3,7 @@ const app = express();
 const Vehicle = require('../model/vehicle');
 
 // Route to book a seat
-app.post('/book', async (req, res) => {
+const book_seat = async (req, res) => {
     const { vehicleId, userId } = req.body; // vehicleId and userId should be sent by the frontend
   
     try {
@@ -23,5 +23,7 @@ app.post('/book', async (req, res) => {
     } catch (error) {
       res.status(500).json({ message: 'Error booking seat' });
     }
-  });
+  };
+
+  module.exports = book_seat;
   
