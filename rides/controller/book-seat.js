@@ -1,5 +1,3 @@
-const express = require('express');
-const app = express();
 const Vehicle = require('../model/vehicle');
 
 // Route to book a seat

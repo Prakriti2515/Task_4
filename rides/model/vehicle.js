@@ -7,19 +7,6 @@ const vehicleSchema = new mongoose.Schema({
     vehicleType: {
         type: String
     },
-    capacity: {
-        type: Number
-    },
-    from: {
-        type: String, 
-        enum: ['AKGEC', 'Govindpuram', 'Sector 62', 'Lal Kuan'], 
-        required: true 
-    },
-    to: {
-        type: String, 
-        enum: ['AKGEC', 'Govindpuram', 'Sector 62', 'Lal Kuan'], 
-        required: true 
-    },
     dateTime: {
         type: Date
     },

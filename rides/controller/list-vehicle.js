@@ -1,23 +1,20 @@
-const express = require('express');
-const app = express();
-const Vehicle = require('../model/vehicle');
+const rides = require('../model/ride_schema');
 
 // Route to list a vehicle
 const list_vehicle = async (req, res) => {
-    const { vehicleType, capacity, from, to, dateTime, availableSeats, userId } = req.body;
+  const {userId} = req.params;  
+  const {from, to, dateTime, availableSeats} = req.body;
   
     try {
-      const vehicle = new Vehicle({
+      const ride = new rides({
         driver: userId,
-        vehicleType,
-        capacity,
         from,
         to,
         dateTime,
         availableSeats
       });
   
-      await vehicle.save();
+      await ride.save();
       res.status(201).json({ message: 'Vehicle listed successfully', vehicle });
     } catch (error) {
       res.status(500).json({ message: 'Error listing vehicle' });

@@ -1,19 +1,20 @@
-const express = require('express');
-const Vehicle = require('../model/vehicle');
+const rides = require('../model/ride_schema');
 
 // Route to search available vehicles
 const search = async (req, res) => {
-    const { from, to } = req.query; // Assume these are provided by the passenger
+    const { from, to, travelDate, travelTime } = req.body; // Assume these are provided by the passenger
   
     try {
       // Find available vehicles based on selected locations and available seats
-      const vehicles = await Vehicle.find({
+      const ride = await rides.find({
         from,
         to,
+        travelDate,
+        travelTime,
         availableSeats: { $gt: 0 } // Only vehicles with available seats
       });
   
-      res.json({ vehicles });
+      res.json({ ride });
     } catch (error) {
       res.status(500).json({ message: 'Error fetching vehicles' });
     }

@@ -21,6 +21,10 @@ const signUpSchema = new mongoose.Schema({
     verified:{
         type : Boolean,
         default : false
+    },
+    role:{
+        type : String,
+        enum : ['driver' , 'passenger']
     }
 });
 const User = mongoose.model('User', signUpSchema);
