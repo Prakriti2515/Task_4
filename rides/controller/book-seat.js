@@ -1,3 +1,4 @@
+const io = require('socket.io');
 const Vehicle = require('../model/vehicle');
 
 // Route to book a seat
@@ -13,6 +14,11 @@ const book_seat = async (req, res) => {
         // Decrease available seats by 1
         vehicle.availableSeats -= 1;
         await vehicle.save();
+        
+        io.to(vehicleId).emit('seatAvailabilityUpdated', {
+          vehicleId: vehicle._id,
+          availableSeats: vehicle.availableSeats,
+        });
   
         res.json({ message: 'Seat booked successfully', vehicle });
       } else {

@@ -1,9 +1,9 @@
 {
-  "name" : "Login-Signup",
-  "author" : "",
-  "description" : "Login-authentication",
-  "version" : "1.0.0",
-  "main" : "index.js",
+  "name": "Login-Signup",
+  "author": "",
+  "description": "Login-authentication",
+  "version": "1.0.0",
+  "main": "index.js",
   "scripts": {
     "start": "node index.js",
     "test": "jest",
@@ -20,6 +20,7 @@
     "mongoose": "^8.8.2",
     "nodemailer": "^6.9.16",
     "nodemon": "^3.1.7",
+    "socket.io": "^4.8.1",
     "uuid": "^11.0.3"
   }
 }
