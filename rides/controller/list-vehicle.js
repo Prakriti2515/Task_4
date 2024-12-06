@@ -10,7 +10,8 @@ const list_vehicle = async (req, res) => {
         driver: userId,
         from,
         to,
-        dateTime,
+        travelDate,
+        travelTime,
         availableSeats
       });
   
