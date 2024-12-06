@@ -41,8 +41,9 @@ router.get(('/signup/user/verify/:userId/:uniqueString'),async (req, res) => {
         await User.updateOne({_id : userId}, {verified : true});
         await UserVerification.deleteOne({userId});
         console.log("Verified");
-        res.send('Email verified successfully!');
-        return res.status(200).json({message:"Verification successful"});
+        // res.send('Email verified successfully!');
+        // return res.status(200).json({message:"Verification successful"});
+        res.redirect('/login');
         
     }
     catch(error)

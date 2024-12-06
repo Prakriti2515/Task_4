@@ -9,3 +9,5 @@ router.post('/list_vehicle/:userId', list_vehicle);
 
 const book_seat = require('../controller/book-seat');
 router.post('/book', book_seat);
+
+module.exports = router;

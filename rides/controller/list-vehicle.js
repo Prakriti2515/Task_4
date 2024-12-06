@@ -3,7 +3,7 @@ const rides = require('../model/ride_schema');
 // Route to list a vehicle
 const list_vehicle = async (req, res) => {
   const {userId} = req.params;  
-  const {from, to, dateTime, availableSeats} = req.body;
+  const {from, to, travelDate, travelTime, availableSeats} = req.body;
   
     try {
       const ride = new rides({
