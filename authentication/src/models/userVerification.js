@@ -6,7 +6,7 @@ const verificationSchema = new mongoose.Schema({
         type: String, 
         required : true
     },
-    uniqueString : { // a random string for each user while verification
+    OTP : { // a random string for each user while verification
         type: String,
         required: true
      }, 
