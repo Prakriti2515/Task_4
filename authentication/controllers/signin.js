@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
 const User = require('../src/models/Schema');
+const userVerification = require('../src/models/userVerification');
 
 const signin =  async (req, res) => {
     const {email, password} = req.body;
@@ -11,6 +12,8 @@ const signin =  async (req, res) => {
     }
     try{
         const checkUser = await User.findOne({email});
+        const userId = checkUser._id;
+        console.log("User ID: "+userId);
         if(!checkUser) //if the entered user details do not match any present on the database
         {
             return res.status(400).json({message: "Invalid email "});
@@ -25,7 +28,8 @@ const signin =  async (req, res) => {
                     return res.status(400).json({message: "Invalid email or password"});
                 }
                 else{
-                    return res.status(200).json({message: "Login successful!"});
+                    // return res.status(200).json({message: "Login successful!"});
+                    res.redirect(`/role-choice/${userId}`);
                 }
             }
         }        
