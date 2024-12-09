@@ -16,8 +16,10 @@ const list_vehicle = async (req, res) => {
       });
   
       await ride.save();
-      res.status(201).json({ message: 'Vehicle listed successfully', vehicle });
-    } catch (error) {
+      console.log(`Vehicle listed: ${ride}`);
+      res.status(201).json({ message: 'Vehicle listed successfully', ride});
+    } 
+    catch (error) {
       res.status(500).json({ message: 'Error listing vehicle' });
     }
   };

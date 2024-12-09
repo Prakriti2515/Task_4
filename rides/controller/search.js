@@ -13,9 +13,11 @@ const search = async (req, res) => {
         travelTime,
         availableSeats: { $gt: 0 } // Only vehicles with available seats
       });
-  
-      res.json({ ride });
-    } catch (error) {
+      
+      console.log(`Search: ${ride}`);
+      res.json({ message: "Ride searched", ride });
+    } 
+    catch (error) {
       res.status(500).json({ message: 'Error fetching vehicles' });
     }
   };

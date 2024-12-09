@@ -23,7 +23,6 @@ const forgot_pass = async (req, res) =>{
         console.log("Error while generating token: ",error);
         return res.status(500).json({message: "Error while generating token"});
     }
-
      //sending reset email
      const currentURI = process.env.RESET_URI;
      const mailOptions = {
