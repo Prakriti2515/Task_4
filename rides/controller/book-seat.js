@@ -8,6 +8,7 @@ const book_seat = async (req, res) => {
     try {
       // Find the vehicle
       const vehicle = await Vehicle.findById(vehicleId);
+      console.log("Vehicle: " + vehicle);
   
       // Check if seats are available
       if (vehicle.availableSeats > 0) {
@@ -19,12 +20,15 @@ const book_seat = async (req, res) => {
           vehicleId: vehicle._id,
           availableSeats: vehicle.availableSeats,
         });
-  
+
+        console.log("Seat booked")
         res.json({ message: 'Seat booked successfully', vehicle });
-      } else {
+      } 
+      else {
         res.status(400).json({ message: 'No available seats' });
       }
-    } catch (error) {
+    } 
+    catch (error) {
       res.status(500).json({ message: 'Error booking seat' });
     }
   };
