@@ -3,17 +3,19 @@ const UserVerification = require('../src/models/userVerification');
 const bcrypt = require('bcryptjs');
 
 const verify_otp = async(req, res)=>{
-    const otp = req.body;
-    const userId = req.params;
+    const {otp} = req.body;
+    const {userId} = req.params;
+    console.log(otp);
+    console.log(userId);
 
     if(!otp)
         return res.status(400).json({message: "OTP required"});
-    console.log("Entered OTP: "+otp);
     
-    const verificationData = UserVerification.findOne({userId: userId});
+    const verificationData = await UserVerification.findOne({userId});
+    console.log(`${verificationData}`)
     
     if (!verificationData) 
-    return res.status(400).json({ message: "OTP verification data not found" });
+        return res.status(400).json({ message: "OTP verification data not found" });
 
     // Check if OTP has expired
     const currentTime = Date.now();
@@ -21,15 +23,17 @@ const verify_otp = async(req, res)=>{
         return res.status(400).json({ message: "OTP has expired" });
     }
 
-    const result = await bcrypt.compare(otp, verificationData.otp);
+    console.log(`OTP saved in db: ${verificationData.OTP}`);
+
+    const result = await bcrypt.compare(otp, verificationData.OTP);
     console.log(result); 
 
     if(!result)
-    return res.status(400).json({message: "Invalid OTP"});
+        return res.status(400).json({message: "Invalid OTP"});
     
     await User.updateOne({_id : userId}, {verified : true});
     console.log("OTP Verified");
-    return res.status(200).json({message: "OTP Verified"});
+        return res.status(200).json({message: "OTP Verified"});
         // res.redirect('/schema/login');    
 }
 

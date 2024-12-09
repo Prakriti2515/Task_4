@@ -16,7 +16,7 @@ const signup = async(req,res) => {
 
     try{
         const existingUser = await User.findOne({email}); 
-        if(existingUser){
+        if(existingUser && existingUser.verified == true){
             return res.status(400).json({message: "Email already registered"});
         }
 

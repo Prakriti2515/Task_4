@@ -34,9 +34,12 @@ const sendVerificationEmail = async ({_id, email},res)=>{
     });
     await newVerification.save();
     await transporter.sendMail(mailOptions);
-    // res.status(202).json({message: "Verification email sent.Verification pending."});
-    console.log(`Redirecting to /enter-otp/${_id}`);
-    res.redirect(`/enter-otp/${_id}`);
+    console.log("OTP SENT SUCCESSFULLY");
+    console.log(`OTP: ${otp}`);
+    res.status(202).json({message: `Verification email sent ${_id}`});
+    return ;
+    // console.log(`Redirecting to /enter-otp/${_id}`);
+    // res.redirect(`/enter-otp/${_id}`);
     }
     catch(error){
         console.error(error);

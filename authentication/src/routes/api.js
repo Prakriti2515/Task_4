@@ -53,7 +53,7 @@ router.post('/signup', signup);
 //         res.status(500).json({message: "An error occurred while checking for existing user verification record"});
 //     }
 // });
-router.post('enter-otp/:userId', verify_otp);
+router.post('/enter-otp/:userId', verify_otp);
 //route for the login page
 router.post('/login', signin);
 //request for forgot password

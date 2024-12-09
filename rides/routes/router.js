@@ -14,11 +14,11 @@ router.post('/role-choice/:userId', async(req, res)=>{
     const userId = req.params;
 
     if(choice == "driver")
-        //res.redirect(`/list_vehicle/${userId}`);
-    res.json({ redirect: `/list-vehicle/${userId}` });
+    res.redirect(`/list_vehicle/${userId}`);
+    //res.json({ redirect: `/list-vehicle/${userId}` });
     else if(choice == "passenger")
-        // res.redirect('/search');
-    res.json({ redirect: '/search' });
+    res.redirect('/search');
+    //res.json({ redirect: '/search' });
 });
 
 router.post('/list_vehicle/:userId', list_vehicle);

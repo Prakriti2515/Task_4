@@ -8,12 +8,10 @@ const rides = new mongoose.Schema({
     },
     from: {
         type: String, 
-        enum: ['AKGEC', 'Govindpuram', 'Sector 62', 'Lal Kuan'], 
         required: true 
     },
     to: {
-        type: String, 
-        enum: ['AKGEC', 'Govindpuram', 'Sector 62', 'Lal Kuan'], 
+        type: String,  
         required: true 
     },
     travelDate: {
