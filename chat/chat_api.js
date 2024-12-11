@@ -1,6 +1,7 @@
-const io = require('../index')
+//const io = require('../index')
 
-const chat_socket = io.on('connection', (socket) => {
+module.exports = (io) => {
+  io.on('connection', (socket) => {
   console.log('New user connected');
 
   socket.on('register_user', ({ userId }) => {
@@ -17,6 +18,6 @@ const chat_socket = io.on('connection', (socket) => {
    socket.on('disconnect', () => {
     console.log('A user disconnected:', socket.id);
    });
-
+  
 });
-module.exports = chat_socket;
+}

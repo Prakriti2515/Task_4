@@ -4,6 +4,7 @@ const router = require('./authentication/src/routes/api');
 const vehicle = require('./rides/routes/router');
 const cors = require('cors');
 const {Server} = require('socket.io');
+const http = require('http');
 const chat_socket = require('./chat/chat_api');
 
 const app = express();
@@ -33,4 +34,4 @@ server.listen(port, () => {
     console.log("Port connected");
 })
 
-module.exports = {app, io};
+module.exports = io;
