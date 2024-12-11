@@ -32,7 +32,7 @@ const reset = async (req, res)=>{
         user.password = hashedPass;
         await user.save()
         .then(()=>{
-            res.send('Password reset successfully!');
+            console.log("Password reset successfully");
         return res.status(200).json({message: "Password reset successfully!"});
         })
         .catch((error) => {
