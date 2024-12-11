@@ -10,6 +10,12 @@ const signup = async(req,res) => {
     if(!name || !email || !password){
         return res.status(400).json({message:"All fields are required"});
     }
+
+    // Check if the email length exceeds 250 characters
+    if (email.length > 250) {
+        return res.status(400).json({ message: "Email cannot exceed 250 characters" });
+    }
+    
     const validate = ValidatePass(password);
     if(validate)
         return res.status(400).json({message: "Weak password. Try changing it"});
