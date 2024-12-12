@@ -1,3 +1,7 @@
+const express = require('express');
+const app = express();
+app.use(express.json());
+
 const jwt = require('jsonwebtoken'); //for creating and verifying jwt
 const jwt_key = process.env.JWT_KEY; // secret key for json web token used for aunthentication
 const User = require('../src/models/Schema');

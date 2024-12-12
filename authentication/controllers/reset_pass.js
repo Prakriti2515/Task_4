@@ -1,14 +1,11 @@
-const express = require('express');
-const app = express();
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken'); //for creating and verifying jwt
 const jwt_key = process.env.JWT_KEY; // secret key for json web token used for aunthentication
 const User = require('../src/models/Schema');
 const ValidatePass = require('../utilities/pass_check');
-app.use(express.json());
 
-const reset = async (req, res)=>{
+const reset_pass = async (req, res)=>{
     console.log("Reset pass code is working");
     const {token} = req.params;
     const {newPassword} = req.body;
@@ -49,4 +46,4 @@ const reset = async (req, res)=>{
     }         
 };
 
-module.exports = reset;
+module.exports = reset_pass;

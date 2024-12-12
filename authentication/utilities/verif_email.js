@@ -37,9 +37,12 @@ const sendVerificationEmail = async ({_id, email},res)=>{
     console.log("OTP SENT SUCCESSFULLY");
     console.log(`OTP: ${otp}`);
     res.status(202).json({message: `Verification email sent ${_id}`});
-    return ;
-    // console.log(`Redirecting to /enter-otp/${_id}`);
-    // res.redirect(`/enter-otp/${_id}`);
+    //deleting the otp from database after 15 minutes
+    setTimeout(async () => {
+        await UserVerification.deleteOne({ userId: _id, expiryDate: { $lte: Date.now() } });
+        console.log(`Expired OTP for user ID: ${_id} has been deleted.`);
+    }, 900000);
+    
     }
     catch(error){
         console.error(error);
